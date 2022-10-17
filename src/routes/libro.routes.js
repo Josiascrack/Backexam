@@ -1,9 +1,12 @@
 import { Router } from 'express'
 const router=Router();
-import * as  librocontroller from '../controllers/libro.controller';
+import * as  librocontroller from '../controlles/libro.controlles';
+
 router.get('/listar',librocontroller.readAllLibro); 
-router.post('/agregar',librocontroller.agregarLibro); 
-router.get('/:id',librocontroller.getLibroId); 
+router.get('/listar/listadonombreedit',librocontroller.listarlibroconnombrecat); 
 router.delete('/eliminar/:id' , librocontroller.deleteLibro);
 router.put('/actualizar/:id' , librocontroller.editarLibro);
+router.get('/listar/buscarlibro/:id',librocontroller.getlibroid); 
+router.get('/editorial',librocontroller.readAllEditorial); 
+router.post('/create',librocontroller.agregarLibro); 
 export default router;

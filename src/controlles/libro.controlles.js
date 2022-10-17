@@ -1,64 +1,87 @@
 import { pool } from "../database"
 
-
-
-export const readAllLibro=async(req,res)=>{
+  export const listarlibroconnombrecat=async(req,res)=>{
   
-  try {
-    pool.query(
-      "select l.titulo, l.autor, l.paginas, e.nombre from libro l join editorial e on e.ideditorial = l.ideditorial;",
-
-      function (err, result) {
-        console.log(result);
-        try {
+    pool.query('select idlibro, titulo, autor, paginas, edicion, nombre from libro  join editorial on libro.ideditorial = editorial.ideditorial;', function (err, result) {
+      try {
           return res.status(200).json(result);
-        } catch (error) {
-          return res.status(500).json("Error al listar escuela");
-        }
+      } catch (error) {
+          return res.status(500).json('Error al mostrar libros' + e);
       }
-    );
-  } catch (error) {
-    return res.status(500).json("Error al listar escuela");
-  }
-};
+    });
+  };
 
+  
 export const agregarLibro = async (req,res)=>{
-
-  try {
-    const titulo = req.body.titulo;
-    const autor = req.body.autor;
-    const paginas = parseInt(req.body.paginas);
-    const editor= req.body.editor;
-    const ideditorial = parseInt(req.body.ideditorial);
-    pool.query(
-      "INSERT INTO libro (titulo, autor, paginas, editor, ideditorial) VALUES(?,?,?,?,?); ",
-      [titulo, autor, paginas, editor, ideditorial],
-      function (err, result) {
-        console.log(result);
-        try {
-          return res.status(200).json(result);
-        } catch (error) {
-          return res.status(500).json("Error al listar los libros");
-          
-        }
-
-      }
+    const {titulo,autor,paginas, ideditorial} = req.body;
+    pool.query('insert into libro(titulo, autor, paginas, edicion, ideditorial) values (?,?,?,"aea",?)',[titulo,autor,paginas, ideditorial], function(err, result) {
+    try {
+      return res.status(200).json(
+        `El producto ${ titulo } se agrego correctamente...!` //alt 96
     );
-  } catch (error) {
-    return res.status(500).json("Error al listar escuela");
-  }
-};
-
+    } catch (e) {
+        return res.status(500).json('Error al insertar el libro');
+    }
+  });
+  };
+  export const readAllLibro=async(req,res)=>{
   
+    pool.query('select * from libro', function (err, result) {
+      try {
+          return res.status(200).json(result);
+      } catch (error) {
+          return res.status(500).json('Error al mostrar libros' + e);
+      }
+    });
+  };
+  
+export const deleteLibro = async (req,res)=>{
+    const id = parseInt(req.params.id);
+    pool.query('delete from libro where idlibro = ?;',[id], function(err, result) {
+    try {
+        return res.status(200).json(result);
+    } catch (e) {
+        return res.status(500).json('Error al eliminar el libro');
+    }
+  });
+  };
 
 
-export const getLibroId = async (req,res)=>{
-  const id = parseInt(req.params.id);
-  pool.query('select * from libro where idlibro = ?;',[id], function(err, result) {
-  try {
-      return res.status(200).json(result);
-  } catch (e) {
-      return res.status(500).json('Error al mostrar el producto');
-  }
-});
-};
+
+
+  export const editarLibro = async (req,res)=>{
+    const id = parseInt(req.params.id);
+    const {titulo,autor,paginas,ideditorial} = req.body;
+  
+    pool.query('update libro set titulo = ?, autor = ?, paginas = ? , ideditorial = ?  where idlibro =?',[titulo,autor,paginas,ideditorial,id], function(err, result) {
+    try {
+      return res.status(200).json(
+        `El producto con id  ${ id } se modifico correctamente...!` //alt 96
+    );
+    } catch (e) {
+        return res.status(500).json('Error al insertar la Escuela');
+    }
+  });
+  };
+  
+  
+export const getlibroid = async (req,res)=>{
+    const id = parseInt(req.params.id);
+    pool.query('select * from libros where idlibro = ?;',[id], function(err, result) {
+    try {
+        return res.status(200).json(result);
+    } catch (e) {
+        return res.status(500).json('Error al mostrar el producto');
+    }
+  });
+  };
+  export const readAllEditorial=async(req,res)=>{
+  
+    pool.query('select * from editorial;', function (err, result) {
+      try {
+          return res.status(200).json(result);
+      } catch (error) {
+          return res.status(500).json('Error al mostrar editorial' + e);
+      }
+    });
+  };

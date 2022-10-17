@@ -12,4 +12,3 @@ export const listar_editorial=async(req,res)=>{
       }
     });
   };
-  
